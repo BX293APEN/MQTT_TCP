@@ -35,7 +35,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    const char *host   = "127.0.0.1"; /* 接続先ブローカーアドレス */
+    const char *host   = "192.168.10.64"; /* 接続先ブローカーアドレス */
     int         port   = 1883;        /* MQTT 標準ポート */
     const char *mode   = argv[1];
     const char *topic  = argv[2];
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
         pub_opts.message   = message;
         pub_opts.client_id = client_id;
         pub_opts.qos       = 0;
-        pub_opts.retain    = 0;
+        pub_opts.retain    = 1;
 
         ret = mqtt_publisher(host, port, debug, &pub_opts);
 
