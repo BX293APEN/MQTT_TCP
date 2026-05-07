@@ -56,9 +56,11 @@ target_compile_options(${APP_NAME} PRIVATE
     $<$<C_COMPILER_ID:GNU>:    -Wall -Wextra -Wpedantic -Wno-unused-parameter>
     $<$<C_COMPILER_ID:Clang>:  -Wall -Wextra -Wpedantic -Wno-unused-parameter>
     $<$<C_COMPILER_ID:AppleClang>: -Wall -Wextra -Wpedantic -Wno-unused-parameter>
-    # MSVC: /utf-8 でソース・実行文字セットを UTF-8 に統一
-    #       → BOM なし UTF-8 ソースでの C4819 警告を解消
-    $<$<C_COMPILER_ID:MSVC>: /W4 /WX /utf-8>
+    # MSVC:
+    #   /utf-8   … ソース・実行文字セットを UTF-8 に統一 → C4819 解消
+    #   /wd4996  … strncpy / strdup の POSIX 非推奨警告を抑制 → C4996 解消
+    #              (mq_strncpy / mq_strdup ラッパーが内部で使用)
+    $<$<C_COMPILER_ID:MSVC>: /W4 /WX /utf-8 /wd4996>
 )
 
 # =====================================================================
@@ -86,7 +88,7 @@ message(STATUS "  Output name : ${APP_NAME}.exe")
 message(STATUS "  Build type  : ${CMAKE_BUILD_TYPE}")
 message(STATUS "=====================================")
 message(STATUS "")
-message(STATUS "Build:           mkdir build && cd build && cmake .. && make")
+message(STATUS "Build:           mkdir build && cd build && cmake .. && cmake --build .")
 message(STATUS "Debug build:     cmake .. -DCMAKE_BUILD_TYPE=Debug")
 message(STATUS "Custom name:     cmake .. -DAPP_NAME=your_name")
 message(STATUS "")
